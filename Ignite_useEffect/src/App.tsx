@@ -1,34 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [list, setList] = useState<string[]>([])
+  const [filter, setFilter] = useState('')
+
+  function avisarAPI() {
+    console.log('Lista salva');
+  }
+
+  /// Example to useEffect fetching API ///
+  useEffect(()=> { // useEffect sempre executa quando componente é exibido em tela e quando muda as dependencias monitoradas
+     avisarAPI();
+  }, [list]) // arreay de dependencia [list] nesse caso
+
+  useEffect(()=> {
+    fetch('https://api.github.com/users/tiagoc0sta/repos')
+    .then(response => response.json())
+    .then(data => {
+      setList(data.map((item:any) => item.full_name))
+    })
+  }, []) // array de dependencia vazio. Por isso o useffect so vai executar na primeira renderização.
+
+  const filteredList = list.filter(item => item.includes(filter))
+
+  function addToList() {
+    setList(state => [...state, 'New item'])
+  }
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div>
+      <h1>Hello World</h1>
+
+      <input 
+        type="text" 
+        onChange={e=>setFilter(e.target.value)}
+        value={filter}
+      />
+
+      <ul>
+        {list.map(item => <li>{item}</li>)}
+      </ul>
+
+      <ul>
+        {filteredList.map(item => <li>{item}</li>)}
+      </ul>
+
+
+      <button onClick={addToList}>Add to list</button>
     </div>
   )
 }
 
 export default App
+
+
+//useEffect -> Side effect = efeito colateral
