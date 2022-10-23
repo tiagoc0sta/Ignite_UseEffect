@@ -31,7 +31,10 @@ function App() {
   return (
     <div>
       <h1>Hello World</h1>
+      <button onClick={addToList}>Add to list</button>
 
+
+      <h3>Filter the list of repositories </h3>
       <input 
         type="text" 
         onChange={e=>setFilter(e.target.value)}
@@ -44,10 +47,7 @@ function App() {
 
       <ul>
         {filteredList.map(item => <li>{item}</li>)}
-      </ul>
-
-
-      <button onClick={addToList}>Add to list</button>
+      </ul>      
     </div>
   )
 }
